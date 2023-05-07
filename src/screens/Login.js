@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,19 +7,19 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-} from 'react-native'
+} from 'react-native';
 import login from '../../assets/img-login.png';
+import SignUp from './SignUp';
 
-export default Login = () => {
-  
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
+export default function LoginScreen({ navigation }) {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
 
-  showAlert = viewId => Alert.alert('Alert', 'Button pressed ' + viewId)
+  showAlert = viewId => Alert.alert('Alert', 'Button pressed ' + viewId);
 
   return (
     <View style={styles.container}>
-        <Image source={login} style={styles.imgContainer}/>
+      <Image source={login} style={styles.imgContainer} />
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -46,8 +46,20 @@ export default Login = () => {
         onPress={() => showAlert('login')}>
         <Text style={styles.loginText}>Login</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => showAlert('forgot password')}>
+        <Text style={styles.buttonText}>Forgot your password?</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => navigation.navigate('SignUp')}>
+        <Text style={styles.buttonText}>Sign up</Text>
+      </TouchableOpacity>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -55,8 +67,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    marginTop: 425
+    backgroundColor: '#FFFFFF'
   },
   imgContainer: {
     width: 240,
@@ -96,6 +107,17 @@ const styles = StyleSheet.create({
   loginText: {
     color: 'white',
     fontSize: 16
+  },
+  buttonContainer: {
+    height: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+    width: 250,
+  },
+  buttonText: {
+    fontSize: 14
   }
 })
 

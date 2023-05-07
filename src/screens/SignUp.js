@@ -1,7 +1,4 @@
 import React, { useState } from 'react'
-import 'react-native-gesture-handler';
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import {
   StyleSheet,
   Text,
@@ -10,11 +7,10 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-} from 'react-native'
+} from 'react-native';
 import login from '../../assets/img-login.png';
 
-export default Login = () => {
-  
+export default SignUp = ({}) => {
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
 
@@ -47,19 +43,7 @@ export default Login = () => {
       <TouchableOpacity
         style={[styles.loginButtonContainer, styles.loginButton]}
         onPress={() => showAlert('login')}>
-        <Text style={styles.loginText}>Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => showAlert('forgot password')}>
-        <Text style={styles.buttonText}>Forgot your password?</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => showAlert('sign up')}>
-        <Text style={styles.buttonText}>Sign up</Text>
+        <Text style={styles.loginText}>Create account</Text>
       </TouchableOpacity>
     </View>
   )
@@ -70,8 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    marginTop: 425
+    backgroundColor: '#FFFFFF'
   },
   imgContainer: {
     width: 240,
