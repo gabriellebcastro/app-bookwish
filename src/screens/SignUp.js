@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import account from '../../assets/img-account.png';
 
-export default SignUp = ({}) => {
+export default SignUp = ({ navigation }) => {
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -63,7 +63,7 @@ export default SignUp = ({}) => {
 
       <TouchableOpacity
         style={[styles.loginButtonContainer, styles.loginButton]}
-        onPress={() => showAlert('account created :)')}>
+        onPress={() => navigation.navigate('Success')}>
         <Text style={styles.loginText}>Sign Up</Text>
       </TouchableOpacity>
     </View>
