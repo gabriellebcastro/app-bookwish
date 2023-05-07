@@ -9,7 +9,6 @@ import {
   Alert,
 } from 'react-native';
 import login from '../../assets/img-login.png';
-import SignUp from './SignUp';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState();
@@ -55,7 +54,7 @@ export default function LoginScreen({ navigation }) {
 
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={() => navigation.navigate('SignUp')}>
+        onPress={() => navigation.navigate('Sign Up')}>
         <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
     </View>

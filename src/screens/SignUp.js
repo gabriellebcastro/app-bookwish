@@ -8,17 +8,28 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import login from '../../assets/img-login.png';
+import account from '../../assets/img-account.png';
 
 export default SignUp = ({}) => {
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [confirmPassword, setPassword2] = useState();
 
   showAlert = viewId => Alert.alert('Alert', 'Button pressed ' + viewId)
 
   return (
     <View style={styles.container}>
-        <Image source={login} style={styles.imgContainer}/>
+      <Image source={account} style={styles.imgContainer}/>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputs}
+          placeholder="Name"
+          underlineColorAndroid="transparent"
+          onChangeText={userName => setUserName({ userName })}
+        />
+      </View>
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -40,10 +51,20 @@ export default SignUp = ({}) => {
         />
       </View>
 
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputs}
+          placeholder="Confirm your password"
+          secureTextEntry={true}
+          underlineColorAndroid="transparent"
+          onChangeText={confirmPassword => setPassword2({ confirmPassword })}
+        />
+      </View>
+
       <TouchableOpacity
         style={[styles.loginButtonContainer, styles.loginButton]}
-        onPress={() => showAlert('login')}>
-        <Text style={styles.loginText}>Create account</Text>
+        onPress={() => showAlert('account created :)')}>
+        <Text style={styles.loginText}>Sign Up</Text>
       </TouchableOpacity>
     </View>
   )
@@ -57,8 +78,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF'
   },
   imgContainer: {
-    width: 240,
-    height: 214,
+    width: 300,
+    height: 300,
     marginBottom: 10
   },
   inputContainer: {

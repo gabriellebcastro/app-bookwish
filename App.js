@@ -13,7 +13,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="Sign Up" component={SignUp} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
