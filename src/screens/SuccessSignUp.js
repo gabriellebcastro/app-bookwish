@@ -3,10 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
-  Image,
-  Alert,
+  Image
 } from 'react-native';
 import success from '../../assets/success-account.png';
 
@@ -37,11 +35,6 @@ const styles = StyleSheet.create({
       width: 300,
       height: 300,
       marginBottom: 8
-    },
-    text: {
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        marginVertical: 10
     },
     successText: {
         fontSize: 20,

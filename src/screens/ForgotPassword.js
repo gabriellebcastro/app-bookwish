@@ -8,17 +8,18 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import login from '../../assets/img-login.png';
+import passwordImg from '../../assets/img-password.png';
 
-export default function LoginScreen({ navigation }) {
+export default function ForgotPasswordScreen ({ navigation }) {
   const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-
-  showAlert = viewId => Alert.alert('Alert', 'Button pressed ' + viewId);
 
   return (
     <View style={styles.container}>
-      <Image source={login} style={styles.imgContainer} />
+      <Image source={passwordImg} style={styles.imgContainer} />
+
+      <Text style={styles.successText}>Forgot your password?</Text>
+
+      <Text style={styles.successSubText}>Enter your registered email to reset your password.</Text>
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -30,32 +31,16 @@ export default function LoginScreen({ navigation }) {
         />
       </View>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.inputs}
-          placeholder="Password"
-          secureTextEntry={true}
-          underlineColorAndroid="transparent"
-          onChangeText={password => setPassword({ password })}
-        />
-      </View>
-
       <TouchableOpacity
         style={[styles.loginButtonContainer, styles.loginButton]}
-        onPress={() => showAlert('login')}>
-        <Text style={styles.loginText}>Login</Text>
+        onPress={() => showAlert('Link to reset password sent to registered email.')}>
+        <Text style={styles.loginText}>Reset Password</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={() => navigation.navigate('Forgot Password')}>
-        <Text style={styles.buttonText}>Forgot your password?</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => navigation.navigate('Sign Up')}>
-        <Text style={styles.buttonText}>Sign up</Text>
+        onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.buttonText}>Back to login</Text>
       </TouchableOpacity>
     </View>
   );
@@ -72,6 +57,19 @@ const styles = StyleSheet.create({
     width: 240,
     height: 214,
     marginBottom: 10
+  },
+  successText: {
+  fontSize: 20,
+  fontWeight: "bold",
+  marginLeft: 20,
+  marginRight: 20
+  },
+  successSubText: {
+  marginTop: 10,
+  marginBottom: 15,
+  fontSize: 16,
+  marginLeft: 20,
+  marginRight: 20
   },
   inputContainer: {
     borderBottomColor: '#F5FCFF',
