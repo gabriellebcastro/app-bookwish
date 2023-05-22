@@ -2,6 +2,7 @@ import { StatusBar, SafeAreaView, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LoginScreen from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
 import SuccessSignUp from './src/screens/SuccessSignUp';
@@ -14,7 +15,11 @@ const Tab = createBottomTabNavigator();
 const BookwishTab = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={Bookwish} options={{ headerShown: false }}/>
+      <Tab.Screen name="Home" component={Bookwish} options={{ headerShown: false, tabBarIcon: () => (
+            <View style={{ marginBottom: -15 }}>
+              <Icon name="home" color="#151E47" size={20}/>
+            </View>
+          )}}/>
       {/* Adicionar outras telas aqui */}
     </Tab.Navigator>
   );
