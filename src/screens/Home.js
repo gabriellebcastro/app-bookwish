@@ -11,15 +11,15 @@ import {
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 
-const BookCoverButton = ({ title, onPress }) => {
+const BookCoverButton = ({ onPress, coverImage }) => {
   return (
     <TouchableOpacity style={styles.bookCoverButton} onPress={onPress}>
-      <Text style={styles.bookCoverButtonText}>{title}</Text>
+      <Image source={coverImage} style={styles.bookCoverImage} />
     </TouchableOpacity>
   );
 };
 
-const UserUpdate = ({ update }) => {
+{/*const UserUpdate = ({ update }) => {
   return (
     <View style={styles.updateContainer}>
       <View style={styles.userInfoContainer}>
@@ -40,25 +40,27 @@ const UserUpdate = ({ update }) => {
       </View>
     </View>
   );
-};
+};*/}
 
 export default function Bookwish({ navigation }) {
 
   const bookCovers = [
-    { id: 1, title: 'Book 1' },
-    { id: 2, title: 'Book 2' },
-    { id: 3, title: 'Book 3' },
-    { id: 4, title: 'Book 4' },
-    { id: 5, title: 'Book 5' }
+    { id: 1, coverImage: require('../../assets/book1.jpg') },
+    { id: 2, coverImage: require('../../assets/book2.jpg') },
+    { id: 3, coverImage: require('../../assets/book3.jpg') },
+    { id: 4, coverImage: require('../../assets/book4.jpg') },
+    { id: 5, coverImage: require('../../assets/book5.jpg') },
+    { id: 6, coverImage: require('../../assets/book6.jpg') },
   ];
 
   const currentReading = {
     title: 'Current Book',
     author: 'John Doe',
-    progress: 57
+    progress: 57,
+    coverImage: require('../../assets/book1.jpg')
   };
 
-  const userUpdates = [
+  {/*const userUpdates = [
     {
       id: 1,
       userPhoto: require('../../assets/profilepic.png'),
@@ -89,7 +91,7 @@ export default function Bookwish({ navigation }) {
       progress: 75,
       timestamp: '2023-05-20 12:00',
     }
-  ];
+  ];*/}
 
   return (
     <ScrollView style={styles.container}>
@@ -107,7 +109,11 @@ export default function Bookwish({ navigation }) {
         <Text style={styles.title}>Discover new books</Text>
         <ScrollView horizontal>
           {bookCovers.map((book) => (
-            <BookCoverButton key={book.id} title={book.title} />
+            <BookCoverButton
+              key={book.id}
+              onPress={() => {}}
+              coverImage={book.coverImage}
+            />
           ))}
         </ScrollView>
       </View>
@@ -121,7 +127,7 @@ export default function Bookwish({ navigation }) {
 
           <View style={styles.bookInfoContainer}>
             <TouchableOpacity style={styles.currentBookButton}>
-              <Text style={styles.currentBookButtonText}>Book</Text>
+              <Image source={currentReading.coverImage} style={styles.currentBookImage} />
             </TouchableOpacity>
 
             <View style={styles.bookInfoTextContainer}>
@@ -172,9 +178,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 10,
   },
-  bookCoverButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  bookCoverImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 30,
   },
   currentReadingContainer: {
     width: '100%',
@@ -194,9 +201,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  currentBookButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  currentBookImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
   },
   bookInfoTextContainer: {
     marginLeft: 20,
