@@ -132,7 +132,7 @@ export default function Bookwish({ navigation }) {
         </View>
       </View>
 
-      <View style={styles.view}>
+      {/*<View style={styles.view}>
         <Text style={styles.title}>Your updates</Text>
         <ScrollView horizontal>
           <View style={styles.userUpdatesContainer}>
@@ -141,7 +141,7 @@ export default function Bookwish({ navigation }) {
             ))}
           </View>
         </ScrollView>
-      </View>
+            </View>*/}
 
     </ScrollView>
   );

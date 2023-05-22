@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   columnWrapper: {
     justifyContent: 'space-between',
-    paddingHorizontal: 8,
+    marginRight: 10,
   },
   button: {
     width: 145,
