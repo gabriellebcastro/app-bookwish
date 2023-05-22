@@ -7,9 +7,8 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  ScrollView
 } from 'react-native';
 
-export default function Profile({ navigation }) {
+export default function Feed({ navigation }) {
 
 }
