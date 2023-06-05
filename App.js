@@ -2,6 +2,7 @@ import { StatusBar, SafeAreaView, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { firebase } from './src/firebase/config.js';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import LoginScreen from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
