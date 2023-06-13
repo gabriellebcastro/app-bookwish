@@ -9,12 +9,25 @@ import {
   Alert,
 } from 'react-native';
 import login from '../../assets/img-login.png';
+import { auth } from '../../src/firebase/config.js';
 
 export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');  
 
-  showAlert = viewId => Alert.alert('Alert', 'Button pressed ' + viewId);
+  const handleLogin = () => {
+    auth.signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log('Usuário logado:', user);
+        navigation.navigate('Bookwish');
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        Alert.alert('Erro ao fazer login', errorMessage);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -26,7 +39,7 @@ export default function LoginScreen({ navigation }) {
           placeholder="Email"
           keyboardType="email-address"
           underlineColorAndroid="transparent"
-          onChangeText={email => setEmail({ email })}
+          onChangeText={email => setEmail(email)}
         />
       </View>
 
@@ -36,13 +49,13 @@ export default function LoginScreen({ navigation }) {
           placeholder="Password"
           secureTextEntry={true}
           underlineColorAndroid="transparent"
-          onChangeText={password => setPassword({ password })}
+          onChangeText={password => setPassword(password)}
         />
       </View>
 
       <TouchableOpacity
         style={[styles.loginButtonContainer, styles.loginButton]}
-        onPress={() => navigation.navigate('Bookwish')}>
+        onPress={handleLogin}>
         <Text style={styles.loginText}>Login</Text>
       </TouchableOpacity>
 

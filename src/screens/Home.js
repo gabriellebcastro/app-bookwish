@@ -19,29 +19,6 @@ const BookCoverButton = ({ onPress, coverImage }) => {
   );
 };
 
-{/*const UserUpdate = ({ update }) => {
-  return (
-    <View style={styles.updateContainer}>
-      <View style={styles.userInfoContainer}>
-        <View style={styles.userContainer}>
-          <Image source={update.userPhoto} style={styles.userPhoto} />
-          <View style={styles.userInfoTextContainer}>
-            <Text style={styles.userName}>{update.userName}</Text>
-            <Text style={styles.commentText} numberOfLines={2}>{update.comment}</Text>
-          </View>
-        </View>
-        <View style={styles.updateTextContainer}>
-          <Text style={styles.timestamp}>{update.timestamp}</Text>
-        </View>
-      </View>
-      <View style={styles.bookInfoContainer}>
-        <Text style={styles.bookInfo}>{update.bookTitle} - {update.bookAuthor}</Text>
-        <Text style={styles.progress}>{update.progress}% completed</Text>
-      </View>
-    </View>
-  );
-};*/}
-
 export default function Bookwish({ navigation }) {
 
   const bookCovers = [
@@ -59,39 +36,6 @@ export default function Bookwish({ navigation }) {
     progress: 57,
     coverImage: require('../../assets/book1.jpg')
   };
-
-  {/*const userUpdates = [
-    {
-      id: 1,
-      userPhoto: require('../../assets/profilepic.png'),
-      userName: 'Gabrielle Castro',
-      comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      bookTitle: 'Book 1',
-      bookAuthor: 'Author 1',
-      progress: 25,
-      timestamp: '2023-05-20 10:30',
-    },
-    {
-      id: 2,
-      userPhoto: require('../../assets/profilepic.png'),
-      userName: 'Gabrielle Castro',
-      comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      bookTitle: 'Book 2',
-      bookAuthor: 'Author 2',
-      progress: 50,
-      timestamp: '2023-05-20 11:45',
-    },
-    {
-      id: 3,
-      userPhoto: require('../../assets/profilepic.png'),
-      userName: 'Gabrielle Castro',
-      comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      bookTitle: 'Book 3',
-      bookAuthor: 'Author 3',
-      progress: 75,
-      timestamp: '2023-05-20 12:00',
-    }
-  ];*/}
 
   return (
     <ScrollView style={styles.container}>
@@ -137,17 +81,6 @@ export default function Bookwish({ navigation }) {
           </View>
         </View>
       </View>
-
-      {/*<View style={styles.view}>
-        <Text style={styles.title}>Your updates</Text>
-        <ScrollView horizontal>
-          <View style={styles.userUpdatesContainer}>
-            {userUpdates.map((update) => (
-              <UserUpdate key={update.id} update={update} />
-            ))}
-          </View>
-        </ScrollView>
-            </View>*/}
 
     </ScrollView>
   );

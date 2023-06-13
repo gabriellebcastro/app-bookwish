@@ -9,14 +9,39 @@ import {
   Alert,
 } from 'react-native';
 import account from '../../assets/img-account.png';
+import { auth } from '../../src/firebase/config.js';
 
 export default SignUp = ({ navigation }) => {
   const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [confirmPassword, setPassword2] = useState();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  showAlert = viewId => Alert.alert('Alert', 'Button pressed ' + viewId)
+  const handleSignUp = () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        //Atualizar o perfil do usuário com o nome
+        updateProfile(auth.currentUser, { displayName: userName })
+          .then(() => {
+            console.log('Usuário criado com sucesso:', user);
+            navigation.navigate('Success');
+          })
+          .catch((error) => {
+            console.log('Erro ao atualizar o perfil do usuário:', error);
+          });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        Alert.alert('Erro ao criar a conta', errorMessage);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -27,7 +52,8 @@ export default SignUp = ({ navigation }) => {
           style={styles.inputs}
           placeholder="Name"
           underlineColorAndroid="transparent"
-          onChangeText={userName => setUserName({ userName })}
+          value={userName}
+          onChangeText={setUserName}
         />
       </View>
 
@@ -37,7 +63,8 @@ export default SignUp = ({ navigation }) => {
           placeholder="Email"
           keyboardType="email-address"
           underlineColorAndroid="transparent"
-          onChangeText={email => setEmail({ email })}
+          value={email}
+          onChangeText={setEmail}
         />
       </View>
 
@@ -47,7 +74,8 @@ export default SignUp = ({ navigation }) => {
           placeholder="Password"
           secureTextEntry={true}
           underlineColorAndroid="transparent"
-          onChangeText={password => setPassword({ password })}
+          value={password}
+          onChangeText={setPassword}
         />
       </View>
 
@@ -57,18 +85,19 @@ export default SignUp = ({ navigation }) => {
           placeholder="Confirm your password"
           secureTextEntry={true}
           underlineColorAndroid="transparent"
-          onChangeText={confirmPassword => setPassword2({ confirmPassword })}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
         />
       </View>
 
       <TouchableOpacity
         style={[styles.loginButtonContainer, styles.loginButton]}
-        onPress={() => navigation.navigate('Success')}>
+        onPress={handleSignUp}>
         <Text style={styles.loginText}>Sign Up</Text>
       </TouchableOpacity>
     </View>
   )
-}
+}  
 
 const styles = StyleSheet.create({
   container: {
