@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "392214281743",
+    "project_id": "bookwish-723b7",
+    "storage_bucket": "bookwish-723b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392214281743:android:1231e9f03c302b25abed7a",
+        "android_client_info": {
+          "package_name": "com.gabgabgab.bookwishrefactoring"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "392214281743-2rg0avudi72g6qn69ntmh62ilgq7m5lv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gabgabgab.bookwishrefactoring",
+            "certificate_hash": "e73684657e213ceae11e3d0b5c517fdf75e8cda6"
+          }
+        },
+        {
+          "client_id": "392214281743-pqhd4kd582flolssq4cj54q4o1m80q9s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gabgabgab.bookwishrefactoring",
+            "certificate_hash": "845cf04ba5f649b665317ec5b3f992fa7d0f3468"
+          }
+        },
+        {
+          "client_id": "392214281743-fesdhqvkcisqsna2sds72htm4bur9u1f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvTCsVSVR9ZJURIOWbXiLzvhDjagiSDlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "392214281743-fesdhqvkcisqsna2sds72htm4bur9u1f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

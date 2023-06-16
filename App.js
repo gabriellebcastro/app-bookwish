@@ -1,20 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar, SafeAreaView, View } from 'react-native';
+import 'expo-dev-client';
+import { GoogleSignin, GoogleSigninButton, Image } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+import React, { useState, useEffect } from 'react';
+import LoginScreen from './src/screens/Login';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar />
+      <LoginScreen />
+    </SafeAreaView>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
