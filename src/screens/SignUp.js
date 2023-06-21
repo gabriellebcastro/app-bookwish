@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import account from '../../assets/img-account.png';
 import { auth } from '../../src/firebase/config.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 export default SignUp = ({ navigation }) => {
   const [userName, setUserName] = useState('');
@@ -28,14 +28,30 @@ export default SignUp = ({ navigation }) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        //Atualizar o perfil do usuário com o nome
-        updateProfile(auth.currentUser, { displayName: userName })
+
+        // Salvar os dados do usuário no Firestore
+        const db = getFirestore();
+        const userRef = collection(db, 'usuarios');
+        const userData = {
+          userName: userName,
+          email: email,
+        };
+
+        addDoc(userRef, userData)
           .then(() => {
-            console.log('Usuário criado com sucesso:', user);
-            navigation.navigate('Success');
+            console.log('Dados do usuário salvos com sucesso no Firestore');
+            // Atualizar o perfil do usuário com o nome
+            updateProfile(auth.currentUser, { displayName: userName })
+              .then(() => {
+                console.log('Usuário criado com sucesso:', user);
+                navigation.navigate('Success');
+              })
+              .catch((error) => {
+                console.log('Erro ao atualizar o perfil do usuário:', error);
+              });
           })
           .catch((error) => {
-            console.log('Erro ao atualizar o perfil do usuário:', error);
+            console.error('Erro ao salvar os dados do usuário no Firestore:', error);
           });
       })
       .catch((error) => {
@@ -47,7 +63,7 @@ export default SignUp = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={account} style={styles.imgContainer}/>
+      <Image source={account} style={styles.imgContainer} />
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -98,8 +114,9 @@ export default SignUp = ({ navigation }) => {
         <Text style={styles.loginText}>Sign Up</Text>
       </TouchableOpacity>
     </View>
-  )
-}  
+  );
+};
+
 
 const styles = StyleSheet.create({
   container: {

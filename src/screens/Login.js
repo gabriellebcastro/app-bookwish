@@ -10,17 +10,35 @@ import {
 } from 'react-native';
 import login from '../../assets/img-login.png';
 import { auth } from '../../src/firebase/config.js';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');  
+  const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    auth.signInWithEmailAndPassword(email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log('Usuário logado:', user);
-        navigation.navigate('Bookwish');
+
+        const db = getFirestore();
+        const usuariosRef = collection(db, 'usuarios');
+        const q = query(usuariosRef, where('email', '==', email));
+
+        getDocs(q)
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const userData = doc.data();
+              console.log('Dados do usuário:', userData);
+              navigation.navigate('Bookwish');
+            });
+          })
+          .catch((error) => {
+            console.log('Erro ao consultar os dados do usuário:', error);
+            navigation.navigate('Bookwish');
+          });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -39,7 +57,8 @@ export default function LoginScreen({ navigation }) {
           placeholder="Email"
           keyboardType="email-address"
           underlineColorAndroid="transparent"
-          onChangeText={email => setEmail(email)}
+          value={email}
+          onChangeText={setEmail}
         />
       </View>
 
@@ -49,25 +68,29 @@ export default function LoginScreen({ navigation }) {
           placeholder="Password"
           secureTextEntry={true}
           underlineColorAndroid="transparent"
-          onChangeText={password => setPassword(password)}
+          value={password}
+          onChangeText={setPassword}
         />
       </View>
 
       <TouchableOpacity
         style={[styles.loginButtonContainer, styles.loginButton]}
-        onPress={() => navigation.navigate('Bookwish')}>
+        onPress={handleLogin}
+      >
         <Text style={styles.loginText}>Login</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={() => navigation.navigate('Forgot Password')}>
+        onPress={() => navigation.navigate('Forgot Password')}
+      >
         <Text style={styles.buttonText}>Forgot your password?</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={() => navigation.navigate('Sign Up')}>
+        onPress={() => navigation.navigate('Sign Up')}
+      >
         <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
     </View>
