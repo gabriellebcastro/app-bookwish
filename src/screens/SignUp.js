@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import account from '../../assets/img-account.png';
 import { auth } from '../../src/firebase/config.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 
 export default SignUp = ({ navigation }) => {
   const [userName, setUserName] = useState('');
