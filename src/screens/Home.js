@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
+import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
 
 const BookCoverButton = ({ onPress, coverImage }) => {
   return (
@@ -19,8 +21,18 @@ const BookCoverButton = ({ onPress, coverImage }) => {
   );
 };
 
-export default function Bookwish({ navigation }) {
+const SearchResultItem = ({ book, onPress }) => {
+  return (
+    <TouchableOpacity style={styles.searchResultItem} onPress={() => onPress(book)}>
+      <View style={styles.searchResultItemText}>
+        <Text style={styles.searchResultItemTitle}>{book.volumeInfo.title}</Text>
+        <Text style={styles.searchResultItemAuthor}>{book.volumeInfo.authors?.join(', ')}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
+export default function Bookwish({ navigation }) {
   const bookCovers = [
     { id: 1, coverImage: require('../../assets/book1.jpg') },
     { id: 2, coverImage: require('../../assets/book2.jpg') },
@@ -34,30 +46,78 @@ export default function Bookwish({ navigation }) {
     title: 'Current Book',
     author: 'John Doe',
     progress: 57,
-    coverImage: require('../../assets/book1.jpg')
+    coverImage: require('../../assets/book1.jpg'),
+  };
+
+  const [searchResults, setSearchResults] = useState([]);
+  const [filteredResults, setFilteredResults] = useState([]);
+  const [searchText, setSearchText] = useState('');
+
+  const searchBooks = async (text) => {
+    try {
+      const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
+        params: {
+          q: text,
+          key: 'AIzaSyCfLKUxhd-LEMeFb5jmd55i33Qu3SrRmRk',
+        },
+      });
+
+      const { data } = response;
+      setSearchResults(data.items || []);
+    } catch (error) {
+      console.error('Error searching books:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (searchText) {
+      const filtered = searchResults.filter(
+        (book) =>
+          book.volumeInfo.title.toLowerCase().includes(searchText.toLowerCase()) ||
+          book.volumeInfo.authors?.join(', ').toLowerCase().includes(searchText.toLowerCase()) ||
+          book.volumeInfo.isbn?.includes(searchText)
+      );
+      setFilteredResults(filtered);
+    } else {
+      setFilteredResults([]);
+    }
+  }, [searchText, searchResults]);
+
+  const handleBookPress = (book) => {
+    navigation.navigate('BookDetails', { book });
   };
 
   return (
     <ScrollView style={styles.container}>
-      <SearchBar
-        round
-        searchIcon={{ size: 24 }}
-        placeholder="Search"
-        inputStyle={{ backgroundColor: 'white' }}
-        containerStyle={{ backgroundColor: 'white', borderWidth: 1, borderRadius: 5 }}
-        inputContainerStyle={{ backgroundColor: 'white' }}
-        placeholderTextColor={'#555555'}
-      />
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={24} color="black" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+          placeholderTextColor="#555555"
+          onChangeText={(text) => {
+            setSearchText(text);
+            searchBooks(text);
+          }}
+        />
+      </View>
+
+      {filteredResults.length > 0 && (
+        <View style={styles.view}>
+          <Text style={styles.title}>Search Results</Text>
+          <ScrollView horizontal>
+            {filteredResults.map((book) => (
+              <SearchResultItem key={book.id} book={book} onPress={handleBookPress} />
+            ))}
+          </ScrollView>
+        </View>
+      )}
 
       <View style={styles.view}>
         <Text style={styles.title}>Discover new books</Text>
         <ScrollView horizontal>
           {bookCovers.map((book) => (
-            <BookCoverButton
-              key={book.id}
-              onPress={() => {}}
-              coverImage={book.coverImage}
-            />
+            <BookCoverButton key={book.id} onPress={() => {}} coverImage={book.coverImage} />
           ))}
         </ScrollView>
       </View>
@@ -81,7 +141,6 @@ export default function Bookwish({ navigation }) {
           </View>
         </View>
       </View>
-
     </ScrollView>
   );
 }
@@ -90,17 +149,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   view: {
     padding: 10,
-    marginLeft: 10
+    marginLeft: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
   },
   bookCoverButton: {
     width: 95,
@@ -120,7 +179,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#151E47',
     borderRadius: 10,
-    padding: 25
+    padding: 25,
   },
   bookInfoContainer: {
     flexDirection: 'row',
@@ -168,7 +227,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   updateContainer: {
-    width: 300, 
+    width: 300,
     marginRight: 10,
   },
   userInfoContainer: {
@@ -210,5 +269,22 @@ const styles = StyleSheet.create({
   progress: {
     fontSize: 12,
     color: '#555555',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    marginLeft: 10,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
 });
