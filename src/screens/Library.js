@@ -1,51 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
-
-const books = [
-  {
-    id: '1',
-    title: 'Livro 1',
-    coverImage: require('../../assets/book1.jpg'),
-  },
-  {
-    id: '2',
-    title: 'Livro 2',
-    coverImage: require('../../assets/book2.jpg'),
-  },
-  {
-    id: '3',
-    title: 'Livro 3',
-    coverImage: require('../../assets/book3.jpg'),
-  },
-  {
-    id: '4',
-    title: 'Livro 4',
-    coverImage: require('../../assets/book4.jpg'),
-  },
-  {
-    id: '5',
-    title: 'Livro 5',
-    coverImage: require('../../assets/book5.jpg'),
-  },
-  {
-    id: '6',
-    title: 'Livro 6',
-    coverImage: require('../../assets/book6.jpg'),
-  },
-  {
-    id: '7',
-    title: 'Livro 7',
-    coverImage: require('../../assets/book7.jpg'),
-  },
-  {
-    id: '8',
-    title: 'Livro 8',
-    coverImage: require('../../assets/book8.jpg'),
-  },
-];
+import { v4 as uuidv4 } from 'uuid';
+import { auth, firestore } from '../../src/firebase/config.js';
+import { getFirestore, collection, query, where, onSnapshot, addDoc } from 'firebase/firestore';
 
 const generateRandomRating = () => {
-  return Math.floor(Math.random() * 5) + 1; // Gera um número aleatório entre 1 e 5
+  return Math.floor(Math.random() * 5) + 1;
 };
 
 const renderStars = (rating) => {
@@ -63,20 +23,50 @@ const renderStars = (rating) => {
 };
 
 export default function Library({ navigation }) {
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.button}>
-      <Image source={item.coverImage} style={styles.bookCover} />
-      <Text style={styles.buttonText}>{item.title}</Text>
-      {renderStars(generateRandomRating())}
-    </TouchableOpacity>
-  );
+  const [libraryBooks, setLibraryBooks] = useState([]);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const { uid } = user;
+      const db = getFirestore();
+      const libraryRef = collection(db, 'usuarios', uid, 'library');
+      const q = query(libraryRef);
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const booksData = [];
+        snapshot.forEach((doc) => {
+          const book = doc.data();
+          booksData.push(book);
+        });
+        setLibraryBooks(booksData);
+      });
+
+      return () => unsubscribe();
+    }
+  }, []);
+
+  const navigateToBookDetails = (book) => {
+    navigation.navigate('BookDetails', { bookId: book.id });
+  };
+
+  const renderItem = ({ item }) => {
+    const key = uuidv4(); // Generate a unique key for each item
+    return (
+      <TouchableOpacity style={styles.button} key={key} onPress={() => navigateToBookDetails(item)}>
+        <Image source={{ uri: item.coverImage }} style={styles.bookCover} />
+        <Text style={styles.buttonText}>{item.title}</Text>
+        {renderStars(generateRandomRating())}
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={books}
+        data={libraryBooks}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={() => uuidv4()}
         numColumns={2}
         contentContainerStyle={styles.contentContainer}
         columnWrapperStyle={styles.columnWrapper}

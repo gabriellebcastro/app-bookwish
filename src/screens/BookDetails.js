@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Button } from 'react-native';
+import { auth, firestore } from '../../src/firebase/config.js';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 export default function BookDetails({ navigation, route }) {
   const [book, setBook] = useState(null);
@@ -18,6 +20,25 @@ export default function BookDetails({ navigation, route }) {
       }
     } catch (error) {
       console.log('Error fetching book details', error);
+    }
+  };
+
+  const saveBookToLibrary = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const { uid } = user;
+        const db = getFirestore();
+        const libraryRef = collection(db, 'usuarios', uid, 'library');
+        await addDoc(libraryRef, {
+          title: book.title,
+          author: book.authors && book.authors.join(', '),
+          coverImage: book.imageLinks?.thumbnail,
+        });
+        console.log('Book saved to library');
+      }
+    } catch (error) {
+      console.log('Error saving book to library', error);
     }
   };
 
@@ -43,8 +64,16 @@ export default function BookDetails({ navigation, route }) {
           <Text style={styles.isbn}>ISBN: {book.industryIdentifiers?.[0]?.identifier}</Text>
         </View>
       </View>
-      <Text style={styles.synopsisTitle}>Synopsis</Text>
-      <Text style={styles.synopsis}>{book.description}</Text>
+      <View style={styles.synopsisContainer}>
+        <Text style={styles.synopsisTitle}>Synopsis</Text>
+        <View style={styles.synopsisScrollContainer}>
+          <ScrollView>
+            <Text style={styles.synopsis}>{book.description}</Text>
+          </ScrollView>
+        </View>
+      </View>
+
+      <Button title="Save to Library" onPress={saveBookToLibrary} color="#151E47" />
     </ScrollView>
   );
 }
@@ -86,10 +115,17 @@ const styles = StyleSheet.create({
     color: 'gray',
     marginBottom: 10,
   },
+  synopsisContainer: {
+    marginBottom: 20,
+  },
   synopsisTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  synopsisScrollContainer: {
+    flex: 1,
+    maxHeight: 200, // Adjust the maximum height as needed
   },
   synopsis: {
     fontSize: 16,
