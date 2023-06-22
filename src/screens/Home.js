@@ -10,7 +10,6 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import { SearchBar } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -77,7 +76,10 @@ export default function Bookwish({ navigation }) {
         (book) =>
           book.volumeInfo.title.toLowerCase().includes(searchText.toLowerCase()) ||
           book.volumeInfo.authors?.join(', ').toLowerCase().includes(searchText.toLowerCase()) ||
-          book.volumeInfo.isbn?.includes(searchText)
+          (book.volumeInfo.industryIdentifiers &&
+            book.volumeInfo.industryIdentifiers.some((identifier) =>
+              identifier.identifier.toLowerCase().includes(searchText.toLowerCase())
+            ))
       );
       setFilteredResults(filtered);
     } else {
@@ -86,7 +88,7 @@ export default function Bookwish({ navigation }) {
   }, [searchText, searchResults]);
 
   const handleBookPress = (book) => {
-    navigation.navigate('BookDetails', { book });
+    navigation.navigate('BookDetails', { bookId: book.id });
   };
 
   return (

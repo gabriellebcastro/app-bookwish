@@ -12,6 +12,7 @@ import Bookwish from './src/screens/Home';
 import Profile from './src/screens/Profile';
 import Library from './src/screens/Library';
 import Feed from './src/screens/Feed';
+import BookDetails from './src/screens/BookDetails.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -57,6 +58,7 @@ export default function App() {
           <Stack.Screen name="Success" component={SuccessSignUp} />
           <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
           <Stack.Screen name="Bookwish" component={BookwishTab} />
+          <Stack.Screen name="BookDetails" component={BookDetails} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
