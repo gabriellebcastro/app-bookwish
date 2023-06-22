@@ -94,16 +94,17 @@ export default function Bookwish({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
-        <Ionicons name="search" size={24} color="black" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search"
           placeholderTextColor="#555555"
+          fontSize={16}
           onChangeText={(text) => {
             setSearchText(text);
             searchBooks(text);
           }}
         />
+        <Ionicons name="search" size={24} color="black" style={styles.searchIcon} />
       </View>
 
       {filteredResults.length > 0 && (
@@ -280,20 +281,25 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
-    marginLeft: 10,
+    marginTop: 10,
+    marginBottom: 1,
+    marginLeft: 18,
+    marginRight: 10,
+    position: 'relative', 
   },
   searchIcon: {
-    marginRight: 10,
+    position: 'absolute',
+    right: 10,
   },
   searchInput: {
     flex: 1,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-  },
+    paddingRight: 30,
+  },  
   searchResultContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
