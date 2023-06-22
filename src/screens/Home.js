@@ -8,10 +8,12 @@ import {
   Image,
   Alert,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BookCoverButton = ({ onPress, coverImage }) => {
   return (
@@ -88,7 +90,7 @@ export default function Bookwish({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
         <Ionicons name="search" size={24} color="black" style={styles.searchIcon} />
         <TextInput
@@ -105,11 +107,14 @@ export default function Bookwish({ navigation }) {
       {filteredResults.length > 0 && (
         <View style={styles.view}>
           <Text style={styles.title}>Search Results</Text>
-          <ScrollView horizontal>
-            {filteredResults.map((book) => (
-              <SearchResultItem key={book.id} book={book} onPress={handleBookPress} />
-            ))}
-          </ScrollView>
+          <FlatList
+            style={styles.searchResultList}
+            data={filteredResults}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <SearchResultItem book={item} onPress={handleBookPress} />
+            )}
+          />
         </View>
       )}
 
@@ -141,7 +146,7 @@ export default function Bookwish({ navigation }) {
           </View>
         </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -286,5 +291,32 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 5,
     paddingHorizontal: 10,
+  },
+  searchResultContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  searchResultItem: {
+    width: '100%',
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  searchResultItemText: {
+    padding: 10,
+  },
+  searchResultItemTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  searchResultItemAuthor: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  searchResultList: {
+    height: 200,
+    flexGrow: 0,
   },
 });
