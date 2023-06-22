@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Button, TouchableOpacity } from 'react-native';
 import { auth, firestore } from '../../src/firebase/config.js';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
@@ -73,7 +73,9 @@ export default function BookDetails({ navigation, route }) {
         </View>
       </View>
 
-      <Button title="Save to Library" onPress={saveBookToLibrary} color="#151E47" />
+      <TouchableOpacity style={styles.saveButton} onPress={saveBookToLibrary}>
+      <Text style={styles.saveButtonText}>Save to Library</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -125,9 +127,20 @@ const styles = StyleSheet.create({
   },
   synopsisScrollContainer: {
     flex: 1,
-    maxHeight: 200, // Adjust the maximum height as needed
+    maxHeight: 200,
   },
   synopsis: {
     fontSize: 16,
+  },
+  saveButton: {
+    backgroundColor: '#151E47',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  saveButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
