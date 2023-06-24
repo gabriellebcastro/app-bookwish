@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  Alert,
   ScrollView,
   FlatList,
 } from 'react-native';
@@ -56,6 +55,11 @@ export default function Bookwish({ navigation }) {
 
   const searchBooks = async (text) => {
     try {
+      if (text.trim() === '') {
+        setSearchResults([]);
+        return;
+      }
+
       const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
         params: {
           q: text,
@@ -293,7 +297,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    paddingVertical: 5,
+    paddingVertical: 14,
     paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: 'gray',

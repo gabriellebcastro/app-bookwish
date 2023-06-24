@@ -13,6 +13,7 @@ import Profile from './src/screens/Profile';
 import Library from './src/screens/Library';
 import Feed from './src/screens/Feed';
 import BookDetails from './src/screens/BookDetails.js';
+import BookLibrary from './src/screens/BookLibrary.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,13 +53,14 @@ export default function App() {
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login" screenOptions={{ headerStyle: { backgroundColor: '#CFD7F8' } }}>
+        <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Sign Up" component={SignUp} />
           <Stack.Screen name="Success" component={SuccessSignUp} />
           <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
           <Stack.Screen name="Bookwish" component={BookwishTab} />
           <Stack.Screen name="BookDetails" component={BookDetails} />
+          <Stack.Screen name="BookLibrary" component={BookLibrary} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

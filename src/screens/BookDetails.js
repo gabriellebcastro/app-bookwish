@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Button, TouchableOpacity } from 'react-native';
-import { auth, firestore } from '../../src/firebase/config.js';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { auth } from '../../src/firebase/config.js';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function BookDetails({ navigation, route }) {
   const [book, setBook] = useState(null);
@@ -30,12 +31,15 @@ export default function BookDetails({ navigation, route }) {
         const { uid } = user;
         const db = getFirestore();
         const libraryRef = collection(db, 'usuarios', uid, 'library');
-        await addDoc(libraryRef, {
+        const newBookRef = await addDoc(libraryRef, {
+          id: uuidv4(), // Gerar um ID único para o livro
           title: book.title,
           author: book.authors && book.authors.join(', '),
           coverImage: book.imageLinks?.thumbnail,
+          pageCount: book.pageCount,
+          addedAt: serverTimestamp(), // Registrar a data/hora em que o livro foi adicionado
         });
-        console.log('Book saved to library');
+        console.log('Book saved to library with ID:', newBookRef.id);
       }
     } catch (error) {
       console.log('Error saving book to library', error);
@@ -74,7 +78,7 @@ export default function BookDetails({ navigation, route }) {
       </View>
 
       <TouchableOpacity style={styles.saveButton} onPress={saveBookToLibrary}>
-      <Text style={styles.saveButtonText}>Save to Library</Text>
+        <Text style={styles.saveButtonText}>Save to Library</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -89,6 +93,7 @@ const styles = StyleSheet.create({
   bookContainer: {
     flexDirection: 'row',
     marginBottom: 20,
+    marginTop: 10,
   },
   bookCover: {
     width: 100,
@@ -127,7 +132,7 @@ const styles = StyleSheet.create({
   },
   synopsisScrollContainer: {
     flex: 1,
-    maxHeight: 200,
+    maxHeight: 400,
   },
   synopsis: {
     fontSize: 16,
@@ -137,6 +142,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+    paddingVertical: 14,
   },
   saveButtonText: {
     color: 'white',
