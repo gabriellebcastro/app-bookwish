@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
-import { getFirestore, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { auth } from '../../src/firebase/config.js';
 
 export default function BookLibrary({ route, navigation }) {
@@ -14,7 +14,7 @@ export default function BookLibrary({ route, navigation }) {
       if (user) {
         const { uid } = user;
         const db = getFirestore();
-        const bookRef = doc(db, 'books', book.id);
+        const bookRef = doc(db, 'usuarios', uid, 'library');
         await updateDoc(bookRef, { rating: newRating });
         setRating(newRating);
       }
@@ -29,7 +29,7 @@ export default function BookLibrary({ route, navigation }) {
       if (user) {
         const { uid } = user;
         const db = getFirestore();
-        const bookRef = doc(db, 'books', book.id);
+        const bookRef = doc(db, 'usuarios', uid, 'library');
         await updateDoc(bookRef, { isFavorite: !isFavorite });
         setIsFavorite(!isFavorite);
       }
@@ -44,7 +44,7 @@ export default function BookLibrary({ route, navigation }) {
       if (user) {
         const { uid } = user;
         const db = getFirestore();
-        const libraryRef = doc(db, 'usuarios', uid, 'library', book.id);
+        const bookRef = doc(db, 'usuarios', uid, 'library');
         console.log('Library reference:', libraryRef);
         await deleteDoc(libraryRef);
         console.log('Book removed from library');

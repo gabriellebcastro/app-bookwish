@@ -32,12 +32,12 @@ export default function BookDetails({ navigation, route }) {
         const db = getFirestore();
         const libraryRef = collection(db, 'usuarios', uid, 'library');
         const newBookRef = await addDoc(libraryRef, {
-          id: uuidv4(), // Gerar um ID único para o livro
+          id: uuidv4(),
           title: book.title,
           author: book.authors && book.authors.join(', '),
           coverImage: book.imageLinks?.thumbnail,
           pageCount: book.pageCount,
-          addedAt: serverTimestamp(), // Registrar a data/hora em que o livro foi adicionado
+          addedAt: serverTimestamp(),
         });
         console.log('Book saved to library with ID:', newBookRef.id);
       }
