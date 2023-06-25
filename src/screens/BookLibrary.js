@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
-import { getFirestore, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, deleteDoc, collection, setDoc, addDoc } from 'firebase/firestore';
 import { auth } from '../../src/firebase/config.js';
 import { FontAwesome } from 'react-native-vector-icons';
 
@@ -8,6 +8,7 @@ export default function BookLibrary({ route, navigation }) {
   const { book } = route.params;
   const [rating, setRating] = useState(book.rating || 0);
   const [isFavorite, setIsFavorite] = useState(book.isFavorite || false);
+  const [status, setStatus] = useState(book.status || '');
 
   const updateBookRating = async (newRating) => {
     try {
@@ -18,7 +19,7 @@ export default function BookLibrary({ route, navigation }) {
         const bookRef = doc(db, 'usuarios', uid, 'library', book.id);
         await updateDoc(bookRef, { rating: newRating });
         setRating(newRating);
-        console.log ('Book rated.')
+        console.log('Book rated.');
       }
     } catch (error) {
       console.log('Error updating book rating:', error);
@@ -57,6 +58,36 @@ export default function BookLibrary({ route, navigation }) {
     }
   };
 
+  const updateBookStatus = async (newStatus) => {
+    try {
+        const user = auth.currentUser;
+        if (user) {
+          const { uid } = user;
+          const db = getFirestore();
+          const bookRef = doc(db, 'usuarios', uid, 'library', book.id);
+    
+          if (newStatus === 'Lendo') {
+            const historyCollectionRef = collection(db, 'usuarios', uid, 'library', book.id, 'history');
+            const historyData = {
+              startDate: new Date().toISOString(),
+              endDate: null,
+              comments: [],
+              currentPage: null,
+            };
+            const newHistoryDocRef = await addDoc(historyCollectionRef, historyData);
+            console.log('History document created:', newHistoryDocRef.id);
+          }
+    
+          await updateDoc(bookRef, { status: newStatus });
+          setStatus(newStatus);
+          console.log('Book status updated.');
+        }
+      } catch (error) {
+        console.log('Error updating book status:', error);
+      }
+    
+  };
+
   return (
     <View style={styles.container}>
       <Image style={styles.bookCover} source={{ uri: book.coverImage }} />
@@ -79,6 +110,27 @@ export default function BookLibrary({ route, navigation }) {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => updateBookRating(5)}>
           <Text style={[styles.ratingStar, rating === 5 && styles.ratingStarActive]}>★</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.statusContainer}>
+        <TouchableOpacity
+          style={[styles.statusOption, status === 'Quero ler' && styles.selectedStatusOption]}
+          onPress={() => updateBookStatus('Quero ler')}
+        >
+          <Text style={styles.statusOptionText}>Quero ler</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.statusOption, status === 'Lendo' && styles.selectedStatusOption]}
+          onPress={() => updateBookStatus('Lendo')}
+        >
+          <Text style={styles.statusOptionText}>Lendo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.statusOption, status === 'Lido' && styles.selectedStatusOption]}
+          onPress={() => updateBookStatus('Lido')}
+        >
+          <Text style={styles.statusOptionText}>Lido</Text>
         </TouchableOpacity>
       </View>
 
@@ -154,5 +206,28 @@ const styles = StyleSheet.create({
   removeButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  statusLabel: {
+    marginRight: 10,
+    fontWeight: 'bold',
+  },
+  statusOption: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'gray',
+    marginRight: 10,
+  },
+  selectedStatusOption: {
+    backgroundColor: 'gray',
+  },
+  statusOptionText: {
+    color: 'black',
   },
 });
