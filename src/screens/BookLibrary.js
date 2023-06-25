@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { getFirestore, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { auth } from '../../src/firebase/config.js';
+import { FontAwesome } from 'react-native-vector-icons';
 
 export default function BookLibrary({ route, navigation }) {
   const { book } = route.params;
@@ -14,9 +15,10 @@ export default function BookLibrary({ route, navigation }) {
       if (user) {
         const { uid } = user;
         const db = getFirestore();
-        const bookRef = doc(db, 'usuarios', uid, 'library');
+        const bookRef = doc(db, 'usuarios', uid, 'library', book.id);
         await updateDoc(bookRef, { rating: newRating });
         setRating(newRating);
+        console.log ('Book rated.')
       }
     } catch (error) {
       console.log('Error updating book rating:', error);
@@ -29,9 +31,10 @@ export default function BookLibrary({ route, navigation }) {
       if (user) {
         const { uid } = user;
         const db = getFirestore();
-        const bookRef = doc(db, 'usuarios', uid, 'library');
+        const bookRef = doc(db, 'usuarios', uid, 'library', book.id);
         await updateDoc(bookRef, { isFavorite: !isFavorite });
         setIsFavorite(!isFavorite);
+        console.log('Book is favorite.');
       }
     } catch (error) {
       console.log('Error updating favorite status:', error);
@@ -44,9 +47,8 @@ export default function BookLibrary({ route, navigation }) {
       if (user) {
         const { uid } = user;
         const db = getFirestore();
-        const bookRef = doc(db, 'usuarios', uid, 'library');
-        console.log('Library reference:', libraryRef);
-        await deleteDoc(libraryRef);
+        const bookRef = doc(db, 'usuarios', uid, 'library', book.id);
+        await deleteDoc(bookRef);
         console.log('Book removed from library');
         navigation.goBack();
       }
@@ -81,9 +83,11 @@ export default function BookLibrary({ route, navigation }) {
       </View>
 
       <TouchableOpacity style={styles.favoriteButton} onPress={toggleFavorite}>
-        <Text style={styles.favoriteButtonText}>
-          {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
-        </Text>
+        <FontAwesome
+          name={isFavorite ? 'heart' : 'heart-o'}
+          size={24}
+          color={isFavorite ? 'red' : 'gray'}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.removeButton} onPress={removeBookFromLibrary}>
@@ -136,14 +140,9 @@ const styles = StyleSheet.create({
   },
   favoriteButton: {
     marginTop: 10,
-    backgroundColor: '#151E47',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
-  },
-  favoriteButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
   },
   removeButton: {
     marginTop: 20,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { auth } from '../../src/firebase/config.js';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, serverTimestamp, doc, updateDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function BookDetails({ navigation, route }) {
@@ -29,23 +29,27 @@ export default function BookDetails({ navigation, route }) {
       const user = auth.currentUser;
       if (user) {
         const { uid } = user;
+        console.log ('Id da Library: ', uid);
         const db = getFirestore();
-        const libraryRef = collection(db, 'usuarios', uid, 'library');
+        const userRef = doc(db, 'usuarios', uid);
+        const libraryRef = collection(userRef, 'library');
+  
         const newBookRef = await addDoc(libraryRef, {
-          id: uuidv4(),
           title: book.title,
           author: book.authors && book.authors.join(', '),
           coverImage: book.imageLinks?.thumbnail,
           pageCount: book.pageCount,
           addedAt: serverTimestamp(),
         });
+        const bookId = newBookRef.id;
+        await updateDoc(newBookRef, { id: bookId });
         console.log('Book saved to library with ID:', newBookRef.id);
       }
     } catch (error) {
       console.log('Error saving book to library', error);
     }
   };
-
+  
   if (!book) {
     return (
       <View style={styles.container}>

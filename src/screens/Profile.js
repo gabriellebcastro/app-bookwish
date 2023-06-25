@@ -104,15 +104,25 @@ export default function Profile({ navigation }) {
 
   const saveBio = async () => {
     try {
-      const uid = auth.currentUser.uid;
-      const userDocRef = doc(getFirestore(), 'usuarios', uid);
-      await updateDoc(userDocRef, { bio });
-      console.log('Bio saved successfully');
+      const user = auth.currentUser;
+      if (user) {
+        const uid = user.uid;
+        const userDocRef = doc(getFirestore(), 'usuarios', uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+  
+        if (userDocSnapshot.exists()) {
+          await updateDoc(userDocRef, { bio });
+        } else {
+          await setDoc(userDocRef, { bio });
+        }
+  
+        console.log('Bio saved successfully');
+      }
     } catch (error) {
       console.error('Error saving bio:', error);
     }
   };
-
+  
   const handleDeleteAccount = () => {
     setShowDeleteConfirmation(true);
   };
