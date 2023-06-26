@@ -14,7 +14,7 @@ import Library from './src/screens/Library';
 import Feed from './src/screens/Feed';
 import BookDetails from './src/screens/BookDetails.js';
 import BookLibrary from './src/screens/BookLibrary.js';
-import ReadingStory from './src/screens/ReadingHistory.js';
+import ReadingHistory from './src/screens/ReadingHistory.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,7 +62,7 @@ export default function App() {
           <Stack.Screen name="Bookwish" component={BookwishTab} />
           <Stack.Screen name="BookDetails" component={BookDetails} />
           <Stack.Screen name="BookLibrary" component={BookLibrary} />
-          <Stack.Screen name="ReadingStory" component={ReadingStory} />
+          <Stack.Screen name="ReadingHistory" component={ReadingHistory} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

@@ -9,6 +9,7 @@ export default function BookLibrary({ route, navigation }) {
   const [rating, setRating] = useState(book.rating || 0);
   const [isFavorite, setIsFavorite] = useState(book.isFavorite || false);
   const [status, setStatus] = useState(book.status || '');
+  const [historyId, setHistoryId] = useState(null);
 
   const updateBookRating = async (newRating) => {
     try {
@@ -60,32 +61,45 @@ export default function BookLibrary({ route, navigation }) {
 
   const updateBookStatus = async (newStatus) => {
     try {
-        const user = auth.currentUser;
-        if (user) {
-          const { uid } = user;
-          const db = getFirestore();
-          const bookRef = doc(db, 'usuarios', uid, 'library', book.id);
-    
-          if (newStatus === 'Lendo') {
-            const historyCollectionRef = collection(db, 'usuarios', uid, 'library', book.id, 'history');
-            const historyData = {
-              startDate: new Date().toISOString(),
-              endDate: null,
-              comments: [],
-              currentPage: null,
-            };
-            const newHistoryDocRef = await addDoc(historyCollectionRef, historyData);
-            console.log('History document created:', newHistoryDocRef.id);
-          }
-    
-          await updateDoc(bookRef, { status: newStatus });
-          setStatus(newStatus);
-          console.log('Book status updated.');
-        }
-      } catch (error) {
-        console.log('Error updating book status:', error);
+      const user = auth.currentUser;
+      if (user) {
+        const { uid } = user;
+        const db = getFirestore();
+        const bookRef = doc(db, 'usuarios', uid, 'library', book.id);
+        await updateDoc(bookRef, { status: newStatus });
+        setStatus(newStatus);
+        console.log('Book status updated.');
       }
-    
+    } catch (error) {
+      console.log('Error updating book status:', error);
+    }
+  };
+
+  const renderHistoryButton = () => {
+    if (status === 'Lendo') {
+      return (
+        <TouchableOpacity style={styles.historyButton} onPress={handleHistoryButtonPress}>
+          <Text style={styles.historyButtonText}>Adicionar histórico de leitura</Text>
+        </TouchableOpacity>
+      );
+    } else if (status === 'Lido') {
+      return (
+        <TouchableOpacity style={styles.historyButton} onPress={handleHistoryButtonPress}>
+          <Text style={styles.historyButtonText}>Visualizar histórico de leitura</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  const handleHistoryButtonPress = () => {
+    if (status === 'Lendo') {
+        navigation.navigate('ReadingHistory', { book });
+    } else if (status === 'Lido') {
+      // Visualizar histórico de leitura
+      // ...
+    }
   };
 
   return (
@@ -145,6 +159,8 @@ export default function BookLibrary({ route, navigation }) {
       <TouchableOpacity style={styles.removeButton} onPress={removeBookFromLibrary}>
         <Text style={styles.removeButtonText}>Remove from Library</Text>
       </TouchableOpacity>
+
+      {renderHistoryButton()}
     </View>
   );
 }
@@ -161,73 +177,69 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
   },
   author: {
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 10,
   },
   pages: {
-    fontSize: 14,
-    color: 'gray',
-    marginBottom: 10,
+    fontSize: 16,
+    marginBottom: 20,
   },
   ratingContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  ratingText: {
-    marginRight: 10,
-    fontWeight: 'bold',
+    marginBottom: 20,
   },
   ratingStar: {
     fontSize: 24,
-    color: 'gray',
+    marginRight: 5,
   },
   ratingStarActive: {
     color: 'gold',
   },
-  favoriteButton: {
-    marginTop: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  removeButton: {
-    marginTop: 20,
-    backgroundColor: 'red',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  removeButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
   statusContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  statusLabel: {
-    marginRight: 10,
-    fontWeight: 'bold',
+    marginBottom: 20,
   },
   statusOption: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
+    flex: 1,
+    padding: 10,
     borderWidth: 1,
     borderColor: 'gray',
+    borderRadius: 5,
     marginRight: 10,
+    alignItems: 'center',
   },
   selectedStatusOption: {
     backgroundColor: 'gray',
   },
   statusOptionText: {
-    color: 'black',
+    fontSize: 16,
+  },
+  favoriteButton: {
+    marginBottom: 20,
+  },
+  removeButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  removeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  historyButton: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  historyButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
