@@ -45,6 +45,7 @@ O projeto utiliza os seguintes pacotes e bibliotecas:
 - [@react-navigation/bottom-tabs](https://www.npmjs.com/package/@react-navigation/bottom-tabs): versão 6.5.7
 - [@react-navigation/native](https://www.npmjs.com/package/@react-navigation/native): versão 6.1.6
 - [@react-navigation/stack](https://www.npmjs.com/package/@react-navigation/stack): versão 6.3.16
+- [axios](https://www.npmjs.com/package/axios): versão 1.4.0
 - [expo](https://www.npmjs.com/package/expo): versão 48.0.0
 - [expo-status-bar](https://www.npmjs.com/package/expo-status-bar): versão 1.4.4
 - [firebase](https://www.npmjs.com/package/firebase): versão 9.22.1

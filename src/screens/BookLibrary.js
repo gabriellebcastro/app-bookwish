@@ -95,7 +95,7 @@ export default function BookLibrary({ route, navigation }) {
 
   const handleHistoryButtonPress = () => {
     if (status === 'Lendo') {
-        navigation.navigate('ReadingHistory', { book });
+      navigation.navigate('ReadingHistory', { book });
     } else if (status === 'Lido') {
       // Visualizar histórico de leitura
       // ...
@@ -125,6 +125,14 @@ export default function BookLibrary({ route, navigation }) {
         <TouchableOpacity onPress={() => updateBookRating(5)}>
           <Text style={[styles.ratingStar, rating === 5 && styles.ratingStarActive]}>★</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.favoriteButton} onPress={toggleFavorite}>
+          <FontAwesome
+            name={isFavorite ? 'heart' : 'heart-o'}
+            size={24}
+            color={isFavorite ? 'red' : 'gray'}
+          />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.statusContainer}>
@@ -147,14 +155,6 @@ export default function BookLibrary({ route, navigation }) {
           <Text style={styles.statusOptionText}>Lido</Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.favoriteButton} onPress={toggleFavorite}>
-        <FontAwesome
-          name={isFavorite ? 'heart' : 'heart-o'}
-          size={24}
-          color={isFavorite ? 'red' : 'gray'}
-        />
-      </TouchableOpacity>
 
       <TouchableOpacity style={styles.removeButton} onPress={removeBookFromLibrary}>
         <Text style={styles.removeButtonText}>Remove from Library</Text>
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 20,
   },
   ratingStar: {
@@ -202,6 +203,7 @@ const styles = StyleSheet.create({
   },
   statusContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 20,
   },
   statusOption: {

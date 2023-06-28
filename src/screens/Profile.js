@@ -56,6 +56,7 @@ export default function Profile({ navigation }) {
       .signOut()
       .then(() => {
         navigation.navigate('Login');
+        console.log ('Logout.')
       })
       .catch((error) => {
         console.error('Erro ao fazer logout:', error);
@@ -122,7 +123,7 @@ export default function Profile({ navigation }) {
       console.error('Error saving bio:', error);
     }
   };
-  
+
   const handleDeleteAccount = () => {
     setShowDeleteConfirmation(true);
   };

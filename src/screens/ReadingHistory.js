@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { auth } from '../../src/firebase/config.js';
-import { getFirestore, doc, setDoc, updateDoc, getDoc, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, updateDoc, getDocs, collection, addDoc, query, orderBy, limit} from 'firebase/firestore';
 
 export default function ReadingHistory({ navigation, route }) {
   const { book } = route.params;
-  console.log (book);
+  console.log(book);
   const [comment, setComment] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
 
   const handleSaveReading = async () => {
     if (currentPage < 0 || currentPage > book.pageCount) {
-      // Número de páginas inválido
+      Alert.alert('Número de páginas inválido', 'Digite um número válido de páginas lidas.');
       return;
     }
 
@@ -30,7 +30,7 @@ export default function ReadingHistory({ navigation, route }) {
 
       const newHistoryDocRef = await addDoc(historyCollectionRef, historyData);
       const historyId = newHistoryDocRef.id;
-      
+
       await updateDoc(newHistoryDocRef, { id: historyId });
 
       console.log('History document created:', historyId);
